@@ -6,6 +6,7 @@ import { lazy } from 'react'
 const Login = lazy(() => import("./pages/Login"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const Home = lazy(() => import("./pages/Home"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
       </div>
       {/* <Suspense fallback = {<Loader />}> */}
           <Routes>
+            <Route path = "/" element = {<LandingPage />}></Route>
             <Route path = "/login" element = {<Login />}></Route>
             <Route path = "/SignUp" element = {<SignUp />}></Route>
             <Route path = "/home" element = {<Home />}></Route>
