@@ -1,0 +1,274 @@
+.sign-in {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #0089ed;
+}
+
+.sign-in-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sign-in-headings {
+  padding: -2rem 2rem;
+  color: #fff;
+  margin-left: -1.5rem;
+}
+
+.sign-in-headings-sub-heading1 {
+  font-size: 34px;
+  font-weight: 500;
+}
+
+.sign-in-headings-sub-heading2 {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.sign-in-headings-sub-heading3 {
+  font-size: 13px;
+  margin-top: 1.5rem;
+  font-weight: 300;
+}
+
+.sign-in-form {
+  width: 400px;
+  z-index: 10;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-form_heading {
+  text-align: left;
+}
+
+.sign-in-form_heading p:first-child {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.sign-in-form_heading p:first-child span {
+  font-weight: 600;
+  color: #0089ed;
+}
+
+.sign-in-form_heading p:last-child {
+  font-size: 35px;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.sign-in__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in__form label {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: black;
+  font-weight: 600;
+}
+
+.sign-in__form input {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.sign-in__form__forgot-password {
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.sign-in__form__forgot-password a {
+  color: #0089ed;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sign-in__form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  font-size: 16px;
+  color: #fff;
+  background-color: #0089ed;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sign-in__form button:hover {
+  background-color: #007acc;
+}
+
+/* .sign-in-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-in-img img {
+  width: 300px;
+  height: auto;
+} */
+
+.sign-in__signup-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.sign-in__signup-link p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.sign-in__signup-link .signup-link {
+  color: #007bff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .sign-in {
+      flex-direction: column;
+      padding: 2rem;
+      height: 100%;
+    }
+  
+    .sign-in-headings {
+      margin-left: 0;
+      text-align: center;
+    }
+
+    .sign-in-headings-sub-heading3 {
+        font-size: 14px;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+  
+    .sign-in-form {
+      width: 90%;
+      max-width: 400px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sign-in {
+      justify-content: center;
+      height: 100vh;
+    }
+  
+    .sign-in-headings {
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+  
+    .sign-in-headings-sub-heading1 {
+      font-size: 28px;
+    }
+  
+    .sign-in-headings-sub-heading2 {
+      font-size: 20px;
+    }
+  
+    .sign-in-headings-sub-heading3 {
+      font-size: 14px;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  
+    .sign-in-form {
+      padding: 1.5rem;
+      border-radius: 15px;
+    }
+  
+    .sign-in-form_heading p:first-child {
+      font-size: 18px;
+    }
+  
+    .sign-in-form_heading p:last-child {
+      font-size: 30px;
+    }
+  
+    .sign-in__form input {
+      font-size: 13px;
+      padding: 0.5rem;
+    }
+  
+    .sign-in__form button {
+      font-size: 14px;
+      padding: 0.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .sign-in {
+      padding: 1rem;
+      height: 100vh;
+    }
+  
+    .sign-in-headings {
+      margin: 0 auto;
+      padding: 0;
+    }
+  
+    .sign-in-headings-sub-heading1 {
+      font-size: 24px;
+    }
+  
+    .sign-in-headings-sub-heading2 {
+      font-size: 18px;
+    }
+  
+    .sign-in-headings-sub-heading3 {
+      font-size: 12px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  
+    .sign-in-form {
+      width: 100%;
+      padding: 1rem;
+    }
+  
+    .sign-in__form label {
+      font-size: 12px;
+    }
+  
+    .sign-in__form input {
+      font-size: 12px;
+      padding: 0.4rem;
+    }
+  
+    .sign-in__form__forgot-password a {
+      font-size: 12px;
+    }
+  
+    .sign-in__form button {
+      font-size: 13px;
+      padding: 0.5rem;
+    }
+  
+    .sign-in__signup-link {
+      font-size: 12px;
+    }
+  
+    .sign-in__signup-link .signup-link {
+      font-size: 12px;
+    }
+  }
+  
+
