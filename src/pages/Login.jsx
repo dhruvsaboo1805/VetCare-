@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CryptoJS from "crypto-js"; // Importing crypto-js
 import "../styles/Login.css";
 
 const Login_api = import.meta.env.VITE_API_URL_LOGIN;
@@ -21,31 +22,32 @@ const Login = () => {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(Login_api, formData);
+      const hashedPassword = CryptoJS.SHA256(formData.password).toString();
+      const dataToSend = {
+        username: formData.username, // Keep the username unchanged
+        password: hashedPassword,   // Use the hashed password
+      };
+      const response = await axios.post(Login_api, dataToSend);
 
       if (response.status === 200) {
         const token = response.data.token;
-        // console.log(token);
-        localStorage.setItem("authToken", token); 
+        localStorage.setItem("authToken", token);
 
-        if (response.status === 200 || response.status === 201) {
-          toast.success("Login successful! Redirecting to home...", {
-            position: "top-right",
-            autoClose: 3000,
-          });
+        toast.success("Login successful! Redirecting to home...", {
+          position: "top-right",
+          autoClose: 3000,
+        });
 
-          setTimeout(() => {
-            navigate("/home");
-          }, 2000);
-        } else {
-          throw new Error("Authorization failed");
-        }
+        setTimeout(() => {
+          navigate("/overview");
+        }, 2000);
       } else {
-        throw new Error("Login failed");
+        throw new Error("Authorization failed");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong!", {
@@ -56,23 +58,22 @@ const Login = () => {
   };
 
   const handleSignUpRedirect = () => {
-    navigate("/SignUp");
+    navigate("/signup");
   };
 
   return (
     <div className="sign-in">
       <div className="sign-in-headings">
         <p className="sign-in-headings-sub-heading1">Sign In to</p>
-        <p className="sign-in-headings-sub-heading2">Salon Management App</p>
+        <p className="sign-in-headings-sub-heading2">VetCare +</p>
         <p className="sign-in-headings-sub-heading3">
-          Your journey to effortless salon management begins here. <br />
-          Join us and transform your business today!
+          Step into the VETcare world and give your pet the <br /> care they deserve, every single day
         </p>
       </div>
       <div className="sign-in-form">
         <div className="sign-in-form_heading">
           <p>
-            Welcome to <span>Salon</span>
+            Welcome to <span>VetCare +</span>
           </p>
           <p>Sign In</p>
         </div>

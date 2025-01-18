@@ -165,12 +165,12 @@ const LandingPage = () => {
           {/* Images */}
           <div className="flex flex-col space-y-4">
             <img
-              src={cat} // Replace `cat` with the actual image source
+              src={cat} 
               alt="Cat peeking"
               className="w-3/4 mx-auto md:w-full rounded-lg shadow-lg"
             />
             <img
-              src={dog} // Replace `dog` with the actual image source
+              src={dog} 
               alt="Dog with bow"
               className="w-3/4 mx-auto md:w-full rounded-lg shadow-lg"
             />
