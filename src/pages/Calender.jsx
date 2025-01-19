@@ -92,7 +92,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
+    <div className="max-w-5xl mx-auto p-4 ml-60 ">
       <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
         Monthly Calendar - {new Date().toLocaleString("default", { month: "long", year: "numeric" })}
       </h1>
