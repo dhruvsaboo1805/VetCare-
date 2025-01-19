@@ -30,7 +30,7 @@ const LandingPage = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
-          <a href="#blogs" className="text-gray-700 hover:text-blue-600">
+          <a href="/blogs" className="text-gray-700 hover:text-blue-600">
             Blogs
           </a>
           <a href="#services" className="text-gray-700 hover:text-blue-600">

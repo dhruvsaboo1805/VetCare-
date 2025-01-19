@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import PetCard from "../components/PetCard";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const user_profile_api = import.meta.env.VITE_API_URL_USER_PROFILE;
+const pet_info_api = import.meta.env.VITE_API_URL_CREATE_PET;
 
 const Overview = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isbreed , setisbreed] = useState("");
   const [pets, setPets] = useState([]);
+  const [fullName, setFullName] = useState("");
   const [petName, setPetName] = useState("");
   const [petPhoto, setPetPhoto] = useState(null);
   const [breed, setBreed] = useState("");
@@ -16,6 +25,131 @@ const Overview = () => {
   const [diseases, setDiseases] = useState([]);
   const [vaccines, setVaccines] = useState([]);
   const [medication, setMedication] = useState([]);
+
+  // user profile api
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+
+      try {
+        const response = await axios.get(user_profile_api, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
+
+        const { full_name, pet_ids , breed } = response.data;
+        console.log(response.data);
+
+        setFullName(full_name);
+        setPets(pet_ids || []); 
+        setisbreed(breed || "German-Shepherd");
+        console.log(pets);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        // Get the auth token from local storage
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+          throw new Error("Authentication token is missing!");
+        }
+
+        // Fetch details for all pet IDs
+        const petDetailsPromises = pets.map((petId) =>
+          axios.get(`${pet_info_api}/${petId}`, {
+            headers: {
+              Authorization: `${authToken}`,
+            },
+          })
+        );
+
+        // Wait for all requests to complete
+        const petResponses = await Promise.all(petDetailsPromises);
+
+        // Extract data and update state
+        const petDetails = petResponses.map((response) => response.data);
+        setPets(petDetails);
+      } catch (err) {
+        console.error("Error fetching pet details:", err);
+        setError(err.message);
+      }
+    };
+
+    fetchPets();
+  }, [pets]);
+
+  // pet info api
+
+  const handleAddPet = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+  
+    const newPet = {
+      name: petName,
+      breed : isbreed,
+      dob: formatDateToDDMMYYYY(dob),
+      weight:parseInt(weight, 10),
+      gender,
+      reproduction:reproductionStatus,
+      pregnancy:pregnancyStatus,
+      allergies: allergies.map((allergy) => ({
+        ...allergy,
+        date: formatDateToDDMMYYYY(allergy.date),
+      })),
+      diseases: diseases.map((disease) => ({
+        ...disease,
+        date: formatDateToDDMMYYYY(disease.date),
+      })),
+      vaccines: vaccines.map((vaccine) => ({
+        ...vaccine,
+        date: formatDateToDDMMYYYY(vaccine.date),
+      })),
+      medication: medication.map((med) => ({
+        ...med,
+        date: formatDateToDDMMYYYY(med.date),
+      })),
+    };
+  
+    try {
+      const response = await axios.post(pet_info_api, newPet, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+  
+      if (response.status === 201) {
+        console.log("Pet added successfully:", response.data);
+        setPets((prevPets) => [...prevPets, response.data]);
+        handleCloseModal(); // Close the modal
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Error adding pet:", error);
+    }
+  };
+  
+  const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -41,24 +175,24 @@ const Overview = () => {
     setMedication([]);
   };
 
-  const handleAddPet = () => {
-    const newPet = {
-      name: petName,
-      photo: petPhoto,
-      breed,
-      dob,
-      weight,
-      gender,
-      reproductionStatus,
-      pregnancyStatus,
-      allergies,
-      diseases,
-      vaccines,
-      medication,
-    };
-    setPets((prevPets) => [...prevPets, newPet]);
-    handleCloseModal(); // Close modal after adding
-  };
+  // const handleAddPet = () => {
+  //   const newPet = {
+  //     name: petName,
+  //     photo: petPhoto,
+  //     breed,
+  //     dob,
+  //     weight,
+  //     gender,
+  //     reproductionStatus,
+  //     pregnancyStatus,
+  //     allergies,
+  //     diseases,
+  //     vaccines,
+  //     medication,
+  //   };
+  //   setPets((prevPets) => [...prevPets, newPet]);
+  //   handleCloseModal(); // Close modal after adding
+  // };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -131,11 +265,18 @@ const Overview = () => {
     setMedication(updatedMedication);
   };
 
+  const handleCardClick = (petId) => {
+    navigate(`/petsidebar/${petId}`);
+  };
+
   return (
-    <div className="flex flex-wrap items-start justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-wrap items-start justify-center h-auto bg-gray-100 p-6">
       {/* Add Pets Card */}
+      <h1 className="text-2xl font-bold text-gray-700 text-center lg:ml-28">
+          Welcome, {fullName || "User"}
+        </h1>
       <div
-        className="bg-white shadow-lg rounded-lg w-60 h-72 flex flex-col justify-center items-center cursor-pointer mb-6 mr-52"
+        className="bg-white shadow-lg rounded-lg w-60 h-72 flex flex-col justify-center items-center cursor-pointer mb-6 mr-40 mt-14"
         onClick={handleOpenModal}
       >
         <div className="bg-blue-100 rounded-full p-4 mb-4">
@@ -164,7 +305,8 @@ const Overview = () => {
       {/* Display Pet Cards */}
       <div className="flex flex-wrap justify-center">
         {pets.map((pet, index) => (
-          <PetCard key={index} name={pet.name} photo={pet.photo} />
+          <PetCard key={index} name={pet.name} photo={pet.photo} breed = {isbreed} 
+          onClick={() => handleCardClick(pet._id)} />
         ))}
       </div>
 
@@ -225,7 +367,7 @@ const Overview = () => {
               />
               <input
                 type="text"
-                placeholder="Gender"
+                placeholder="Gender - M/F"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 className="w-full p-2 border rounded-md"
@@ -235,14 +377,14 @@ const Overview = () => {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <input
                 type="text"
-                placeholder="Reproduction Status"
+                placeholder="Reproduction Status - true/false"
                 value={reproductionStatus}
                 onChange={(e) => setReproductionStatus(e.target.value)}
                 className="w-full p-2 border rounded-md"
               />
               <input
                 type="text"
-                placeholder="Pregnancy Status"
+                placeholder="Pregnancy Status - true/false"
                 value={pregnancyStatus}
                 onChange={(e) => setPregnancyStatus(e.target.value)}
                 className="w-full p-2 border rounded-md"

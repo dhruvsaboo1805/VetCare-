@@ -46,22 +46,33 @@ const SignUp = () => {
     const hashedPassword = CryptoJS.SHA256(formData.password).toString();
     const dataToSend = {
       full_name: formData.full_name,
-    email: formData.email,
-    phone_num: formData.phone_num,
-    address: formData.address,
-    vet_info: {
-      full_name: formData.vet_info.full_name,
-      phone_num: formData.vet_info.phone_num,
-    },
-      password: hashedPassword,   
+      email: formData.email,
+      phone_num: formData.phone_num,
+      address: formData.address,
+      vet_info: {
+        full_name: formData.vet_info.full_name,
+        phone_num: formData.vet_info.phone_num,
+      },
+      password: hashedPassword,
     };
+  
     axios
       .post(SignUp_api, dataToSend)
-      .then(() => {
+      .then((response) => {
+        // Assuming the token is received in response.data.token
+        const token = response.data.token;
+  
+        // Store the token in localStorage
+        if (token) {
+          localStorage.setItem("authToken", token);
+        }
+  
+        // Display success toast and navigate to another page
         toast.success("Signup successful! Redirecting to Dashboard...", {
           position: "top-right",
           autoClose: 3000,
         });
+  
         setTimeout(() => {
           navigate("/overview");
         }, 2000);
@@ -73,6 +84,7 @@ const SignUp = () => {
         });
       });
   };
+  
 
   return (
     <div className="sign-up">

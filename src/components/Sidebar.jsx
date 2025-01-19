@@ -68,7 +68,7 @@ const Sidebar = () => {
             </li>
             <li>
               <NavLink
-                to="/analytics"
+                to="/calender"
                 className={({ isActive }) =>
                   `block py-2 px-4 text-center font-medium rounded-md ${
                     isActive
@@ -77,7 +77,7 @@ const Sidebar = () => {
                   }`
                 }
               >
-                Analytics
+                Calender
               </NavLink>
             </li>
             <li>

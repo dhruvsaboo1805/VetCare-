@@ -7,14 +7,26 @@ import Sidebar from "./components/Sidebar";
 
 const Login = lazy(() => import("./pages/Login"));
 const SignUp = lazy(() => import("./pages/SignUp"));
+const Blogs = lazy(() => import("./pages/Blogs"));
 const Overview = lazy(() => import("./pages/Overview"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const PetSidebar = lazy(() => import("./pages/PetSidebar"));
+const PetDashboard = lazy(() => import("./pages/PetDashboard"));
+const DailyTracking = lazy(() => import("./pages/DailyTracking"));
+const Reminder = lazy(() => import("./pages/Reminder"));
+const Calender = lazy(() => import("./pages/Calender"));
+// const DailyTracking = lazy(() => import("./pages/DailyTracking")); // New route for DailyTracking
+// const VetVisits = lazy(() => import("./pages/VetVisits")); // New route for VetVisits
+// const PetProfile = lazy(() => import("./pages/PetProfile")); // New route for PetProfile
 
 function App() {
-  const location = useLocation(); // Get the current route path
+  const location = useLocation();
 
   const isLandingPage = location.pathname === "/";
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup"; // Check if it's Login or SignUp
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
+  const isPetSidebarPage = location.pathname.startsWith("/petsidebar/"); // Check if the path starts with `/petsidebar/`
 
   return (
     <div className="flex h-screen">
@@ -31,8 +43,24 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/blogs" element={<Blogs />} />
           </Routes>
         </Suspense>
+      ) : isPetSidebarPage ? (
+        // PetSidebar Layout for `/petsidebar/` paths
+        <div className="flex flex-1">
+          <PetSidebar />
+          <div className="flex-1 p-4">
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route path="/petsidebar/:pet_id" element={<PetSidebar />} />
+                <Route path="/petsidebar/dashboard" element={<PetDashboard />} />
+                <Route path="/petsidebar/dailytrack" element={<DailyTracking />} />
+                <Route path="/petsidebar/reminder" element={<Reminder />} />
+              </Routes>
+            </Suspense>
+          </div>
+        </div>
       ) : (
         // Common Layout for other routes
         <div className="flex flex-1">
@@ -42,6 +70,9 @@ function App() {
             <Suspense fallback={<Loader />}>
               <Routes>
                 <Route path="/overview" element={<Overview />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/calender" element={<Calender />} />
               </Routes>
             </Suspense>
           </div>
