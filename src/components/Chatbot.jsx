@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import chatBot from "../assets/chat-bot.webp"
+import chatBot from "../assets/chat-bot.webp";
+
+const chat_Api = import.meta.env.VITE_API_URL_CHAT; // API URL for chat
+const continue_chat_Api = import.meta.env.VITE_API_URL_CONTINUE_CHAT; // Optional API for continuing chat
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,16 +13,73 @@ const Chatbot = () => {
 
   const toggleChatbot = () => setIsOpen(!isOpen);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() === "") return;
-
+  
+    // Add the user's message to the chat
     setMessages((prev) => [
       ...prev,
       { sender: "user", text: input },
-      { sender: "bot", text: "Thank you for your message!" },
     ]);
+  
+    // Get pet_id from local storage
+    const petId = localStorage.getItem("pet_id");
+  
+    // Construct the API URL with the pet_id query parameter
+    const apiUrl = new URL(chat_Api);
+    if (petId) {
+      apiUrl.searchParams.append("pet_id", petId);
+    }
+  
+    // Call the chat API to get a response from the bot
+    try {
+      const response = await fetch(apiUrl.toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: input,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to get a response from the bot");
+      }
+  
+      const data = await response.json();
+  
+      // Check for error details in the response
+      if (data.detail && data.detail[0].type === "missing") {
+        const missingField = data.detail[0].loc.join(" -> ");
+        const errorMessage = `Missing required field: ${missingField}`;
+        setMessages((prev) => [
+          ...prev,
+          { sender: "bot", text: errorMessage },
+        ]);
+        return;
+      }
+  
+      // If there is no error, show the bot's response
+      const botMessage = data.result || "Sorry, I didn't understand that.";
+      localStorage.setItem("chat_id" , data.chatId);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: botMessage },
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Sorry, there was an error. Please try again." },
+      ]);
+    }
+  
+    // Clear the input field
     setInput("");
   };
+  
+  
 
   return (
     <div className="fixed bottom-4 right-4 flex flex-col items-end">
@@ -28,8 +88,7 @@ const Chatbot = () => {
         onClick={toggleChatbot}
         className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
       >
-        {/* 💬 */}
-        <img src={chatBot} alt="" className="w-10 h-10"/>
+        <img src={chatBot} alt="" className="w-10 h-10" />
       </button>
 
       {/* Chatbot UI */}

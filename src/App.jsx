@@ -30,11 +30,12 @@ function App() {
 
   return (
     <div className="flex h-screen">
-      {isLandingPage ? (
-        // Show Landing Page only
+      {isLandingPage || location.pathname === "/blogs" ? (
+        // Show Landing Page and Blogs page without Navbar and Sidebar
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/blogs" element={<Blogs />} />
           </Routes>
         </Suspense>
       ) : isAuthPage ? (
@@ -43,7 +44,6 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/blogs" element={<Blogs />} />
           </Routes>
         </Suspense>
       ) : isPetSidebarPage ? (

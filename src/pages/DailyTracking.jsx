@@ -90,7 +90,7 @@ const DailyTracking = () => {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-4xl mx-auto bg-white p-8 rounded shadow-lg"
+        className="max-w-2xl mx-auto bg-white p-8 rounded shadow-lg"
       >
         {/* Datentime */}
         <div className="mb-6">

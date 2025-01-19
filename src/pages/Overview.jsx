@@ -3,6 +3,7 @@ import PetCard from "../components/PetCard";
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const user_profile_api = import.meta.env.VITE_API_URL_USER_PROFILE;
 const pet_info_api = import.meta.env.VITE_API_URL_CREATE_PET;
@@ -10,6 +11,7 @@ const pet_info_api = import.meta.env.VITE_API_URL_CREATE_PET;
 const Overview = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading , setLoading] = useState(true);
   const [isbreed , setisbreed] = useState("");
   const [pets, setPets] = useState([]);
   const [fullName, setFullName] = useState("");
@@ -49,8 +51,10 @@ const Overview = () => {
         setPets(pet_ids || []); 
         setisbreed(breed || "German-Shepherd");
         console.log(pets);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        setLoading(false);
       }
     };
 
@@ -82,9 +86,11 @@ const Overview = () => {
         // Extract data and update state
         const petDetails = petResponses.map((response) => response.data);
         setPets(petDetails);
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching pet details:", err);
         setError(err.message);
+        setLoading(false);
       }
     };
 
@@ -137,11 +143,14 @@ const Overview = () => {
         console.log("Pet added successfully:", response.data);
         setPets((prevPets) => [...prevPets, response.data]);
         handleCloseModal(); // Close the modal
+        setLoading(false);
       } else {
         console.error("Unexpected response:", response);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error adding pet:", error);
+      setLoading(false);
     }
   };
   
@@ -174,25 +183,6 @@ const Overview = () => {
     setVaccines([]);
     setMedication([]);
   };
-
-  // const handleAddPet = () => {
-  //   const newPet = {
-  //     name: petName,
-  //     photo: petPhoto,
-  //     breed,
-  //     dob,
-  //     weight,
-  //     gender,
-  //     reproductionStatus,
-  //     pregnancyStatus,
-  //     allergies,
-  //     diseases,
-  //     vaccines,
-  //     medication,
-  //   };
-  //   setPets((prevPets) => [...prevPets, newPet]);
-  //   handleCloseModal(); // Close modal after adding
-  // };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -269,6 +259,11 @@ const Overview = () => {
     navigate(`/petsidebar/${petId}`);
   };
 
+  if(loading)
+  {
+    return <Loader />
+  }
+
   return (
     <div className="flex flex-wrap items-start justify-center h-auto bg-gray-100 p-6">
       {/* Add Pets Card */}
@@ -303,13 +298,23 @@ const Overview = () => {
       </div>
 
       {/* Display Pet Cards */}
-      <div className="flex flex-wrap justify-center">
-        {pets.map((pet, index) => (
-          <PetCard key={index} name={pet.name} photo={pet.photo} breed = {isbreed} 
-          onClick={() => handleCardClick(pet._id)} />
-        ))}
-      </div>
-
+      <div>
+      {loading ? (
+        <div><Loader /></div> // Show a loader while fetching data
+      ) : (
+        <div className="flex flex-wrap justify-center">
+          {pets.map((pet, index) => (
+            <PetCard
+              key={index}
+              name={pet.name}
+              photo={pet.photo}
+              breed={pet.breed}
+              onClick={() => handleCardClick(pet._id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
       {/* Add Pet Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">

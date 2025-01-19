@@ -29,6 +29,33 @@ const Blogs = () => {
       date: "January 12, 2025",
       tag: "Nutrition",
     },
+    {
+        id: 4,
+        title: "Diet Tracking: Why Every Calorie Counts",
+        content:
+          "Tracking your diet helps maintain balanced nutrition and achieve weight management goals. Learn how to use diet-tracking apps to log your meals, monitor calorie intake, and analyze macronutrients.",
+        author: "Emily Clark",
+        date: "January 12, 2025",
+        tag: "Nutrition",
+      },
+      {
+        id: 5,
+        title: "Diet Tracking: Why Every Calorie Counts",
+        content:
+          "Tracking your diet helps maintain balanced nutrition and achieve weight management goals. Learn how to use diet-tracking apps to log your meals, monitor calorie intake, and analyze macronutrients.",
+        author: "Emily Clark",
+        date: "January 12, 2025",
+        tag: "Nutrition",
+      },
+      {
+        id: 6,
+        title: "Diet Tracking: Why Every Calorie Counts",
+        content:
+          "Tracking your diet helps maintain balanced nutrition and achieve weight management goals. Learn how to use diet-tracking apps to log your meals, monitor calorie intake, and analyze macronutrients.",
+        author: "Emily Clark",
+        date: "January 12, 2025",
+        tag: "Nutrition",
+      },
   ];
 
   return (
@@ -36,7 +63,7 @@ const Blogs = () => {
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
         Health Tracking Blogs
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 md:grid-cols-1 lg:grid-cols-3 gap-10">
         {blogPosts.map((post) => (
           <div
             key={post.id}

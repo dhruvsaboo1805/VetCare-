@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import photo from "../assets/landing_page_hero_section.png";
 import dog from "../assets/dog.webp";
 import cat from "../assets/cat.jpeg";
@@ -30,9 +30,10 @@ const LandingPage = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
-          <a href="/blogs" className="text-gray-700 hover:text-blue-600">
+          <NavLink to = "/blogs" className="text-gray-700 hover:text-blue-600">
             Blogs
-          </a>
+          </NavLink>
+      
           <a href="#services" className="text-gray-700 hover:text-blue-600">
             Services
           </a>

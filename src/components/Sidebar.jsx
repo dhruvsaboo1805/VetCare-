@@ -1,12 +1,39 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+const logout_Api = import.meta.env.VITE_API_URL_LOGOUT;
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate(); // Use navigate to redirect the user to login
+  const authToken = localStorage.getItem("authToken");
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(logout_Api, {
+        method: "GET", // Assuming GET method for logout API
+        headers: {
+          Authorization: `${authToken}`, // Sending authToken in the request header
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      // Remove the auth token from localStorage
+      localStorage.removeItem("authToken");
+
+      // Redirect to login page
+      navigate("/login");
+    } catch (error) {
+      console.error("Error during logout:", error.message);
+    }
   };
 
   return (
@@ -123,6 +150,16 @@ const Sidebar = () => {
               </NavLink>
             </li>
           </ul>
+
+          {/* Logout Button */}
+          <div className="mt-auto w-full">
+            <button
+              onClick={handleLogout}
+              className="w-full py-2 text-center text-white bg-red-500 hover:bg-red-700 rounded-md"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </div>
